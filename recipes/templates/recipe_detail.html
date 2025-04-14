@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>{{ recipe.name }}</title>
+</head>
+<body>
+    <h1>{{ recipe.name }}</h1>
+    <p>Servings: {{ recipe.servings }}</p>
+    <p>Prep Time: {{ recipe.prep_time }}</p>
+    <p>Cook Time: {{ recipe.cook_time }}</p>
+    <h2>Ingredients:</h2>
+    <ul>
+        {% for ingredient_name in recipe.ingredient_names %}
+            <li>{{ ingredient_name }}: {{ recipe.ingredient_details|get_item:ingredient_name.quantity }} {{ recipe.ingredient_details|get_item:ingredient_name.unit }}</li>
+        {% endfor %}
+    </ul>
+    <h2>Instructions:</h2>
+    <ol>
+        {% for instruction in recipe.instructions %}
+            <li>{{ instruction }}</li>
+        {% endfor %}
+    </ol>
+    {% if recipe.notes %}
+        <p>Notes: {{ recipe.notes }}</p>
+    {% endif %}
+    <p><a href="{% url 'recipe_list' %}">Back to Recipe List</a></p>
+</body>
+</html>
