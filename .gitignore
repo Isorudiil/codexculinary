@@ -10,17 +10,6 @@ static/*
 /myproject/static/
 /myproject/tmp/
 /myproject/media/
-
-# Vue
-/node_modules
-/dist
-.local
-.DS_Store
-*.env
-.env.*
-!.env.example
-
-# System files
 .vscode/
 .idea/
 .venv/
