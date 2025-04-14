@@ -1,3 +1,26 @@
-.venv
-__pycache__
-.idea
+# Django
+*.pyc
+__pycache__/
+local_settings.py
+db.sqlite3
+*.log
+*.pot
+media/*
+static/*
+/myproject/static/
+/myproject/tmp/
+/myproject/media/
+
+# Vue
+/node_modules
+/dist
+.local
+.DS_Store
+*.env
+.env.*
+!.env.example
+
+# System files
+.vscode/
+.idea/
+.venv/
