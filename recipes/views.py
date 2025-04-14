@@ -1,18 +1,6 @@
 from django.shortcuts import render, redirect
 from .forms import RecipeForm
 from .models import Recipe
-from rest_framework import generics
-from .serializers import RecipeSerializer
-
-
-class RecipeList(generics.ListCreateAPIView):
-    queryset = Recipe.objects.all()
-    serializer_class = RecipeSerializer
-
-
-class RecipeDetail(generics.RetrieveUpdateDestroyAPIView):
-    queryset = Recipe.objects.all()
-    serializer_class = RecipeSerializer
 
 
 def add_recipe(request):
