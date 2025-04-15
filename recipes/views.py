@@ -31,4 +31,4 @@ def add_recipe(request):
             return redirect('recipe_list')
     else:
         form = RecipeForm()
-    return redirect(request, 'add_recipe.html', {'form': form})
+    return render(request, 'add_recipe.html', {'form': form})

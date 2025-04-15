@@ -11,9 +11,15 @@
     <h2>Ingredients:</h2>
     <ul>
         {% for ingredient_name in recipe.ingredient_names %}
-            <li>{{ ingredient_name }}: {{ recipe.ingredient_details|get_item:ingredient_name.quantity }} {{ recipe.ingredient_details|get_item:ingredient_name.unit }}</li>
+            <li>{{ ingredient_name }}:
+                {% for key, value in ingredient_details.ingredient_name %}
+                {{ value.quantity }}
+                {{ value.unit }}
+                {% endfor %}
+            </li>
         {% endfor %}
     </ul>
+
     <h2>Instructions:</h2>
     <ol>
         {% for instruction in recipe.instructions %}
