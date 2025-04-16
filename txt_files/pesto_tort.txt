@@ -1,0 +1,32 @@
+Recipe Name:
+Pesto Tortellini
+
+Ingredient Names (comma-separated):
+cheese tortellini, basil pesto, heavy cream, milk 2%, salt, parmesan cheese
+
+Ingredient Details ('name: quantity unit', one per line):
+cheese tortellini: 18 ounces
+basil pesto: .75 cup
+heavy cream: .25 cup
+milk 2%: .25 cup
+salt: .25 teaspoon
+parmesan cheese: .25 cup
+
+Instructions (one step per line):
+Start a large pot of well-salted water to boil. Boil the pasta until al dente according to the package instructions (usually around 2 minutes).
+Place all ingredients in a saucepan. Simmer over medium heat until the sauce just starts to thicken, about 1 to 2 minutes. Stir the tortellini into the sauce and serve. If desired, top with grated Parmesan cheese.
+
+Servings:
+6
+
+Preparation Time:
+15
+
+Cooking Time:
+15
+
+Categories (comma-separated, optional):
+dinner, Italian, pasta
+
+Notes (optional):
+This dinner is really yummy!
