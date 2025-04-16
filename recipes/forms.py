@@ -1,9 +1,9 @@
 from django import forms
+from .models import Meal
 
 class RecipeForm(forms.Form):
     name = forms.CharField(label='Recipe Name', max_length=100)
-    ingredient_names = forms.CharField(label='Ingredient Names (comma-separated)', widget=forms.Textarea)
-    ingredient_details = forms.CharField(label='Ingredient Details (name: quantity unit, one per line)', widget=forms.Textarea)
+    ingredient_details = forms.CharField(label='Ingredient Details ("name: quantity unit", one per line - in desired order)', widget=forms.Textarea)
     instructions = forms.CharField(label='Instructions (one step per line)', widget=forms.Textarea)
     servings = forms.IntegerField(label='Servings')
     prep_time = forms.IntegerField(label='Preparation Time')
@@ -17,7 +17,7 @@ class RecipeForm(forms.Form):
 
     def clean_ingredient_details(self):
         data = self.cleaned_data['ingredient_details']
-        details = {}
+        ingredient_details = {}
         for line in data.strip().split('\n'):
             if line:
                 parts = line.split(':')
@@ -29,14 +29,14 @@ class RecipeForm(forms.Form):
                         unit = ' '.join(quantity_unit[1:])
                         try:
                             quantity = float(quantity)
-                            details[name] = {'quantity': quantity, 'unit': unit}
+                            ingredient_details[name] = {'quantity': quantity, 'unit': unit}
                         except ValueError:
                             raise forms.ValidationError(f"Invalid quantity for '{name}'. Please enter a number.")
                     else:
                         raise forms.ValidationError(f"Missing quantity for '{name}'.")
                 else:
                     raise forms.ValidationError("Each ingredient details should be in the format 'name: quantity unit'.")
-            return details
+        return ingredient_details
 
     def clean_instructions(self):
         data = self.cleaned_data['instructions']
@@ -47,3 +47,9 @@ class RecipeForm(forms.Form):
         if data:
             return [cat.strip() for cat in data.split(',')]
         return []
+
+
+class MealForm(forms.ModelForm):
+    class Meta:
+        model = Meal
+        fields = ['recipe', 'day', 'meal_type']

@@ -4,10 +4,12 @@
 <html lang="en">
     <head>
         <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
         <title>{{ title }}</title>
-        <link rel="stylesheet" href="{% static "recipes/style.css" %}">
+        <link rel="stylesheet" href="{% static 'style.css' %}">
     </head>
     <section>
+        <h1>Cook.Book</h1>
         <header>
             <nav>
             <a href="{% url 'recipe_list' %}">Recipe List</a> | 

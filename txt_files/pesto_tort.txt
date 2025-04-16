@@ -1,9 +1,6 @@
 Recipe Name:
 Pesto Tortellini
 
-Ingredient Names (comma-separated):
-cheese tortellini, basil pesto, heavy cream, milk 2%, salt, parmesan cheese
-
 Ingredient Details ('name: quantity unit', one per line):
 cheese tortellini: 18 ounces
 basil pesto: .75 cup

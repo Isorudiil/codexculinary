@@ -1,4 +1,5 @@
 {% extends 'base.html' %}
+{% load dict_filters %}
 {% block content %}
     <h1>{{ recipe.name }}</h1>
     <p>Servings: {{ recipe.servings }}</p>
@@ -6,13 +7,8 @@
     <p>Cook Time: {{ recipe.cook_time }}</p>
     <h2>Ingredients:</h2>
     <ul>
-        {% for ingredient_name in recipe.ingredient_names %}
-            <li>{{ ingredient_name }}:
-                {% for key, value in ingredient_details.ingredient_name %}
-                {{ value.quantity }}
-                {{ value.unit }}
-                {% endfor %}
-            </li>
+        {% for ingredient_name, details in recipe.ingredient_details.items %}
+            <li>{{ ingredient_name }}: {{ details.quantity }} {{ details.unit }}</li>
         {% endfor %}
     </ul>
 
