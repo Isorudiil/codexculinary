@@ -1,9 +1,5 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title>{{ recipe.name }}</title>
-</head>
-<body>
+{% extends 'base.html' %}
+{% block content %}
     <h1>{{ recipe.name }}</h1>
     <p>Servings: {{ recipe.servings }}</p>
     <p>Prep Time: {{ recipe.prep_time }}</p>
@@ -30,5 +26,4 @@
         <p>Notes: {{ recipe.notes }}</p>
     {% endif %}
     <p><a href="{% url 'recipe_list' %}">Back to Recipe List</a></p>
-</body>
-</html>
+{% endblock %}

@@ -1,19 +1,14 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Recipe List</title>
-</head>
-<body>
-    <h1>All Recipes</h1>
-    {% if recipes %}
-        <ul>
-            {% for recipe in recipes %}
-                <li><a href="{% url 'recipe_detail' recipe.pk %}">{{ recipe.name }}</a></li>
-            {% endfor %}
-        </ul>
-    {% else %}
-        <p>No recipes added yet.</p>
-    {% endif %}
-    <p><a href="{% url 'add_recipe' %}">Add New Recipe</a></p>
-</body>
-</html>
+{% extends 'base.html' %}
+{% block content %}
+<h1>All Recipes</h1>
+{% if recipes %}
+    <ul>
+        {% for recipe in recipes %}
+            <li><a href="{% url 'recipe_detail' recipe.pk %}">{{ recipe.name }}</a></li>
+        {% endfor %}
+    </ul>
+{% else %}
+    <p>No recipes added yet.</p>
+{% endif %}
+<p><a href="{% url 'add_recipe' %}">Add New Recipe</a></p>
+{% endblock %}
