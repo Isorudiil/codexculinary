@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <h1>Edit Recipe</h1>
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit">Save Changes</button>
+    </form>
+    <a href="{% url 'recipes:recipe_detail' recipe.pk %}" class="cancel-button">Cancel</a>
+{% endblock %}
+    

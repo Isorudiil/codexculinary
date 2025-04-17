@@ -1,9 +1,42 @@
 {% extends 'base.html' %}
+
 {% block content %}
-    <h1>Add New Recipe</h1>
+    <h1>{% if form.instance.pk %}Edit{% else %}Add{% endif %} Recipe</h1>
     <form method="post">
         {% csrf_token %}
-        {{ form.as_p }}
-        <button type="submit">Save Recipe</button>
+        <div class="form-group">
+            <label for="id_name">Recipe Name:</label>
+            {{ form.name }}
+        </div>
+        <div class="form-group">
+            <label for="id_ingredient_details">Ingredients:</label>
+            {{ form.ingredient_details }}
+        </div>
+        <div class="form-group">
+            <label for="id_instructions">Instructions:</label>
+            {{ form.instructions }}
+        </div>
+        <div class="form-group">
+            <label for="id_servings">Servings:</label>
+            {{ form.servings }}
+        </div>
+        <div class="form-group">
+            <label for="id_prep_time">Preparation Time:</label>
+            {{ form.prep_time }}
+        </div>
+        <div class="form-group">
+            <label for="id_cook_time">Cooking Time:</label>
+            {{ form.cook_time }}
+        </div>
+        <div class="form-group">
+            <label for="id_category">Categories:</label>
+            {{ form.category }}
+        </div>
+        <div class="form-group">
+            <label for="id_notes">Notes:</label>
+            {{ form.notes }}
+        </div>
+        <button type="submit">Save Changes</button>
     </form>
+    <a href="{% url 'recipes:recipe_list' %}" class="cancel-button">Cancel</a>
 {% endblock %}

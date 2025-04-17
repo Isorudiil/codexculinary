@@ -1,15 +1,15 @@
 from django import forms
-from .models import Meal
+import csv
 
 class RecipeForm(forms.Form):
     name = forms.CharField(label='Recipe Name', max_length=100)
-    ingredient_details = forms.CharField(label='Ingredient Details ("name: quantity unit", one per line - in desired order)', widget=forms.Textarea)
-    instructions = forms.CharField(label='Instructions (one step per line)', widget=forms.Textarea)
+    ingredient_details = forms.CharField(label='Ingredient Details ("name: quantity unit", one per line - in desired order)', widget=forms.Textarea(attrs={'placeholder': 'format = name: quantity unit\none ingredient per line'}))
+    instructions = forms.CharField(label='Instructions (one step per line)', widget=forms.Textarea(attrs={'placeholder': 'one step per line'}))
     servings = forms.IntegerField(label='Servings')
     prep_time = forms.IntegerField(label='Preparation Time')
     cook_time = forms.IntegerField(label='Cooking Time')
-    category = forms.CharField(label='Categories (comma-separated, optional)', widget=forms.Textarea, required=False)
-    notes = forms.CharField(label='Notes (optional)', widget=forms.Textarea, required=False)
+    category = forms.CharField(label='Categories (comma-separated, optional)', widget=forms.Textarea(attrs={'placeholder': 'comma-separated\noptional'}), required=False)
+    notes = forms.CharField(label='Notes (optional)', widget=forms.Textarea(attrs={'placeholder': 'optional'}), required=False)
 
     def clean_ingredient_names(self):
         data = self.cleaned_data['ingredient_names']
@@ -48,8 +48,6 @@ class RecipeForm(forms.Form):
             return [cat.strip() for cat in data.split(',')]
         return []
 
-
-class MealForm(forms.ModelForm):
-    class Meta:
-        model = Meal
-        fields = ['recipe', 'day', 'meal_type']
+class CSVImportForm(forms.Form):
+    csv_file = forms.FileField(label='CSV File')
+    has_header = forms.BooleanField(label='File has header', initial=True, required=False)

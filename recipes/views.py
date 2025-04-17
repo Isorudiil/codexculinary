@@ -1,17 +1,17 @@
+import csv
 from django.shortcuts import render, redirect, get_object_or_404
-from .forms import MealForm, RecipeForm
-from .models import Meal, Recipe
-from django.contrib.auth.decorators import login_required
+from .forms import RecipeForm, CSVImportForm
+from .models import Recipe
 
 def recipe_list(request):
     recipes = Recipe.objects.all()
     context = {'recipes': recipes, 'title': 'Recipe List'}
-    return render(request, "recipe_list.html", context)
+    return render(request, 'recipes/recipe_list.html', context)
 
 def recipe_detail(request, pk):
     recipe = get_object_or_404(Recipe, pk=pk)
     context = {'recipe': recipe}
-    return render(request, "recipe_detail.html", context)
+    return render(request, "recipes/recipe_detail.html", context)
 
 def add_recipe(request):
     if request.method == 'POST':
@@ -28,49 +28,91 @@ def add_recipe(request):
                 notes=form.cleaned_data['notes']
             )
             recipe.save()
-            return redirect('recipe_list')
+            return redirect('recipes:recipe_list')
     else:
         form = RecipeForm()
-    return render(request, 'add_recipe.html', {'form': form})
+    return render(request, 'recipes/add_recipe.html', {'form': form})
 
-@login_required
-def meal_schedule(request):
-    meals = Meal.objects.filter(user=request.user)
-    context = {'meals': meals}
-    return render(request, 'recipes/meal_schedule.html', context)
-
-@login_required
-def add_meal(request):
+def edit_recipe(request, pk):
+    recipe = get_object_or_404(Recipe, pk=pk)
     if request.method == 'POST':
-        form = MealForm(request.POST)
+        form = RecipeForm(request.POST)
         if form.is_valid():
-            meal = form.save(commit=False)
-            meal.user = request.user
-            meal.save()
-            return redirect('meal_schedule')
-    else:
-        form = MealForm()
-    context = {'form': form}
-    return render(request, 'recipes/add_meal.html', context)
-
-@login_required
-def edit_meal(request, pk):
-    meal = get_object_or_404(Meal, pk=pk, user=request.user)
-    if request.method == 'POST':
-        form = MealForm(request.POST, instance=meal)
-        if form.is_valid():
+            recipe.name = form.cleaned_data['name']
+            recipe.ingredient_details = form.cleaned_data['ingredient_details']
+            recipe.instructions = form.cleaned_data['instructions']
+            recipe.servings = form.cleaned_data['servings']
+            recipe.prep_time = form.cleaned_data['prep_time']
+            recipe.cook_time = form.cleaned_data['cook_time']
+            recipe.category = form.cleaned_data['category']
+            recipe.notes = form.cleaned_data['notes']
             form.save()
-            return redirect('meal_schedule')
+            return redirect('recipes:recipe_detail', pk=recipe.pk)
     else:
-        form = MealForm(instance=meal)
-    context = {'form': form}
-    return render(request, 'recipes/edit_meal.html', context)
+        formatted_ingredients = "\n".join(
+            f"{name}: {details['quantity']} {details['unit']}"
+            for name, details in recipe.ingredient_details.items()    
+        )
+        formatted_instructions = "\n".join(recipe.instructions)
+        formatted_category = ", ".join(recipe.category)
+        form = RecipeForm(initial={
+            'name': recipe.name,
+            'ingredient_details': formatted_ingredients,
+            'instructions': formatted_instructions,
+            'servings': recipe.servings,
+            'prep_time': recipe.prep_time,
+            'cook_time': recipe.cook_time,
+            'category': formatted_category,
+            'notes': recipe.notes,
+        })
+    context = {'form': form, 'recipe': recipe}
+    return render(request, 'recipes/edit_recipe.html', context)
 
-@login_required
-def delete_meal(request, pk):
-    meal = get_object_or_404(Meal, pk=pk, user=request.user)
+def import_recipes_csv(request):
     if request.method == 'POST':
-        meal.delete()
-        return redirect('meal_schedule')
-    context = {'meal', meal}
-    return render(request, 'recipes/delete_meal.html', context)
+        form = CSVImportForm(request.POST, request.FILES)
+        if form.is_valid():
+            csv_file = request.FILES['csv_file']
+            if not csv_file.name.endswith('.csv'):
+                context = {'form': form, 'error': 'File is not CSV type'}
+                return render(request, 'recipes/import_csv.html', context)
+            
+            data = csv_file.read().decode('utf-8')
+            csv_data = csv.reader(data.splitlines())
+
+            if form.cleaned_data['has_header']:
+                next(csv_data)
+
+            for row in csv_data:
+                try:
+                    name = row[0]
+                    ingredient_details_str = row[1]
+                    instructions_str = row[2]
+                    servings = int(row[3])
+                    prep_time = row[4]
+                    cook_time = row[5]
+                    category_str = row[6]
+                    notes = row[7]
+
+                    ingredient_details = eval(ingredient_details_str) if ingredient_details_str else {}
+                    instructions = eval(instructions_str) if instructions_str else []
+                    category = eval(category_str) if category_str else []
+
+                    Recipe.objects.create(
+                        name=name,
+                        ingredient_details=ingredient_details,
+                        instructions=instructions,
+                        servings=servings,
+                        prep_time=prep_time,
+                        cook_time=cook_time,
+                        category=category,
+                        notes=notes,
+                    )
+                except Exception as e:
+                    context = {'form': form, 'error': f'Error processing row: {e}'}
+                    return render(request, 'recipes/import_csv.html', )
+            return redirect('recipes:recipe_list')
+    else:
+        form = CSVImportForm()
+    context = {'form': form}
+    return render(request, 'recipes/import_csv.html', context)

@@ -2,11 +2,24 @@
 {% block content %}
 <h1>All Recipes</h1>
 {% if recipes %}
-    <ul>
+    <div class="recipe-list">
         {% for recipe in recipes %}
-            <li><a href="{% url 'recipe_detail' recipe.pk %}">{{ recipe.name }}</a></li>
+        <div class="recipe-item">
+            <h2>
+                <a href="{% url 'recipes:recipe_detail' recipe.pk %}">{{ recipe.name }}</a>
+            </h2>
+            <p>
+                Prep Time: {{ recipe.prep_time }} | Cook Time: {{ recipe.cook_time }}
+            </p>
+            <p>
+                Categories:
+                {% for category in recipe.category %}
+                    {{ category }}{% if not forloop.last %}, {% endif %}
+                {% endfor %}
+            </p>
+        </div>
         {% endfor %}
-    </ul>
+    </div>
 {% else %}
     <p>No recipes added yet.</p>
 {% endif %}

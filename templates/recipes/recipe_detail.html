@@ -2,6 +2,9 @@
 {% load dict_filters %}
 {% block content %}
     <h1>{{ recipe.name }}</h1>
+    <p>
+        <a href="{% url 'recipes:edit_recipe' recipe.pk %}">Edit Recipe</a>
+    </p>
     <p>Servings: {{ recipe.servings }}</p>
     <p>Prep Time: {{ recipe.prep_time }}</p>
     <p>Cook Time: {{ recipe.cook_time }}</p>
