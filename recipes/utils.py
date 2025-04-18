@@ -42,3 +42,10 @@ def separate_by_comma(comma_separated):
     for item in item_list:
         new_list.append(item)
     return new_list
+
+def separate_by_semicolon(comma_separated):
+    new_list = []
+    item_list = comma_separated.split("; ")
+    for item in item_list:
+        new_list.append(item)
+    return new_list

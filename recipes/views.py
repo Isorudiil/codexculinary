@@ -2,7 +2,7 @@ import csv
 from django.shortcuts import render, redirect, get_object_or_404
 from .forms import RecipeForm, CSVImportForm
 from .models import Recipe
-from .utils import separate_by_comma, parse_ingredient_details
+from . import utils
 import re
 from fractions import Fraction
 import logging
@@ -84,33 +84,40 @@ def import_recipes_csv(request):
             data = csv_file.read().decode('utf-8')
             csv_data = csv.reader(data.splitlines())
 
+            start = 1
+
             if form.cleaned_data['has_header']:
+                start = 2
                 next(csv_data)
 
             errors = []
-            recipes_to_create = []
+            successful_imports = 0
 
-            for col in csv_data:
+
+            for i, row in enumerate(csv_data, start=start):
                 try:
-                    name = col[0]
-                    ingredients_details_str = col[1]
-                    instructions_str = col[2]
-                    servings = int(col[3])
-                    prep_time = int(col[4])
-                    cook_time = int(col[5])
-                    category_str = col[6]
-                    notes = col[7]
+                    name = row[0]
+                    ingredients_details_str = row[1]
+                    instructions_str = row[2]
+                    servings = int(row[3])
+                    prep_time = int(row[4])
+                    cook_time = int(row[5])
+                    category_str = row[6]
+                    notes = row[7]
+
+                    if Recipe.objects.filter(name=name).exists():
+                        errors.append(f'Recipe with name: {name} already exists. Skipping row {i}.')
+                        continue
 
                     ingredient_details = {}
-                    ingredients_list = separate_by_comma(ingredients_details_str)
-                    print(ingredients_list)
+                    ingredients_list = utils.separate_by_comma(ingredients_details_str)
                     for ingredient in ingredients_list:
-                        ingredient_details.update(parse_ingredient_details(ingredient))
-                    instructions = separate_by_comma(instructions_str)
-                    category = separate_by_comma(category_str)
+                        ingredient_details.update(utils.parse_ingredient_details(ingredient))
+                    instructions = utils.separate_by_semicolon(instructions_str)
+                    category = utils.separate_by_comma(category_str)
 
-                    recipes_to_create.append(
-                        Recipe(
+                    try:
+                        Recipe.objects.create(
                             name=name,
                             ingredient_details=ingredient_details,
                             instructions=instructions,
@@ -120,17 +127,18 @@ def import_recipes_csv(request):
                             category=category,
                             notes=notes,
                         )
-                    )
+                        successful_imports += 1
+                    except Exception as create_error:
+                        errors.append(f"Error creating recipe in row {i}: {create_error}")
 
                 except Exception as e:
-                    errors.append(f'Error processing row: {e}')
+                    errors.append(f'Error processing row: {i}: {e}')
                 
             if errors:
-                context = {'form': form, 'errors': errors}
+                context = {'form': form, 'errors': errors, 'successful_imports': successful_imports}
                 return render(request, 'recipes/import_csv.html', context)
-            
-            Recipe.objects.bulk_create(recipes_to_create)
-            return redirect('recipes:recipe_list')
+            else:
+                return redirect('recipes:recipe_list')
     else:
         form = CSVImportForm()
     context = {'form': form}
