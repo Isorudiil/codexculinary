@@ -1,8 +1,11 @@
 import csv
-import ast
 from django.shortcuts import render, redirect, get_object_or_404
 from .forms import RecipeForm, CSVImportForm
 from .models import Recipe
+from .utils import separate_by_comma, parse_ingredient_details
+import re
+from fractions import Fraction
+import logging
 
 def recipe_list(request):
     recipes = Recipe.objects.all()
@@ -70,12 +73,10 @@ def edit_recipe(request, pk):
     return render(request, 'recipes/edit_recipe.html', context)
 
 def import_recipes_csv(request):
-    print('DEBUG: import_recipes_csv view called')
     if request.method == 'POST':
         form = CSVImportForm(request.POST, request.FILES)
         if form.is_valid():
             csv_file = request.FILES['csv_file']
-            print(f'DEBUG: CSV file name: {csv_file}')
             if not csv_file.name.endswith('.csv'):
                 context = {'form': form, 'error': 'File is not CSV type'}
                 return render(request, 'recipes/import_csv.html', context)
@@ -86,39 +87,59 @@ def import_recipes_csv(request):
             if form.cleaned_data['has_header']:
                 next(csv_data)
 
-            for row in csv_data:
-                print(f'DEBUG: Processing row: {row}')
-                try:
-                    name = row[0]
-                    ingredient_details_str = row[1]
-                    instructions_str = row[2]
-                    servings = int(row[3])
-                    prep_time = int(row[4])
-                    cook_time = int(row[5])
-                    category_str = row[6]
-                    notes = row[7]
-                    print(f'DEBUG: {name}, {ingredient_details_str}, {instructions_str}, {servings}, {prep_time}, {cook_time}, {category_str}, {notes}')
+            errors = []
+            recipes_to_create = []
 
-                    # ingredient_details = ast.literal_eval(ingredient_details_str) if ingredient_details_str else {}
-                    # instructions = ast.literal_eval(instructions_str) if instructions_str else []
-                    # category = ast.literal_eval(category_str) if category_str else []
-                    # print(f'DEBUG: {ingredient_details}, {instructions}, {category}')
-                except Exception as e:
-                    context = {'form': form, 'error': f'Error processing row: {e}'}
-                    return render(request, 'recipes/import_csv.html', )
-                
-                Recipe.objects.create(
-                        name=name,
-                        ingredient_details=ingredient_details_str,
-                        instructions=instructions_str,
-                        servings=servings,
-                        prep_time=prep_time,
-                        cook_time=cook_time,
-                        category=category_str,
-                        notes=notes,
+            for col in csv_data:
+                try:
+                    name = col[0]
+                    ingredients_details_str = col[1]
+                    instructions_str = col[2]
+                    servings = int(col[3])
+                    prep_time = int(col[4])
+                    cook_time = int(col[5])
+                    category_str = col[6]
+                    notes = col[7]
+
+                    ingredient_details = {}
+                    ingredients_list = separate_by_comma(ingredients_details_str)
+                    print(ingredients_list)
+                    for ingredient in ingredients_list:
+                        ingredient_details.update(parse_ingredient_details(ingredient))
+                    instructions = separate_by_comma(instructions_str)
+                    category = separate_by_comma(category_str)
+
+                    recipes_to_create.append(
+                        Recipe(
+                            name=name,
+                            ingredient_details=ingredient_details,
+                            instructions=instructions,
+                            servings=servings,
+                            prep_time=prep_time,
+                            cook_time=cook_time,
+                            category=category,
+                            notes=notes,
+                        )
                     )
+
+                except Exception as e:
+                    errors.append(f'Error processing row: {e}')
+                
+            if errors:
+                context = {'form': form, 'errors': errors}
+                return render(request, 'recipes/import_csv.html', context)
+            
+            Recipe.objects.bulk_create(recipes_to_create)
             return redirect('recipes:recipe_list')
     else:
         form = CSVImportForm()
     context = {'form': form}
     return render(request, 'recipes/import_csv.html', context)
+
+def delete_recipe(request, pk):
+    recipe = get_object_or_404(Recipe, pk=pk)
+    if request.method == 'POST':
+        recipe.delete()
+        return redirect('recipes:recipe_list')
+    context = {'recipe': recipe}
+    return render(request, 'recipes/delete_recipe_confirm.html', context)

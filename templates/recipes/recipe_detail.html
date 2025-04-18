@@ -3,7 +3,8 @@
 {% block content %}
     <h1>{{ recipe.name }}</h1>
     <p>
-        <a href="{% url 'recipes:edit_recipe' recipe.pk %}">Edit Recipe</a>
+        <a href="{% url 'recipes:edit_recipe' recipe.pk %}" class="select-button">Edit Recipe</a> | 
+        <a href="{% url 'recipes:delete_recipe' recipe.pk %}" class="delete-button">Delete Recipe</a>
     </p>
     <p>Servings: {{ recipe.servings }}</p>
     <p>Prep Time: {{ recipe.prep_time }}</p>

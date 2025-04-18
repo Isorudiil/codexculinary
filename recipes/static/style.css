@@ -78,3 +78,33 @@ button[type="submit"]:hover {
 body {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
+
+.delete-button {
+    display: inline-block;
+    padding: 10px 20px;
+    background-color: #dc3545; /* Red background */
+    color: white;
+    text-decoration: none;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.delete-button:hover {
+    background-color: #c82333; /* Darker red on hover */
+}
+
+.select-button {
+    display: inline-block;
+    padding: 10px 20px;
+    background-color: darkgray;
+    color: white;
+    text-decoration: none;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.select-button:hover {
+    background-color: grey; /* Darker red on hover */
+}

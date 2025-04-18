@@ -50,4 +50,4 @@ class RecipeForm(forms.Form):
 
 class CSVImportForm(forms.Form):
     csv_file = forms.FileField(label='CSV File')
-    has_header = forms.BooleanField(label='File has header', initial=True, required=False)
+    has_header = forms.BooleanField(label='File has header', initial=False, required=False)
