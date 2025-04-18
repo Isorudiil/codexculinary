@@ -1,4 +1,5 @@
 import csv
+import ast
 from django.shortcuts import render, redirect, get_object_or_404
 from .forms import RecipeForm, CSVImportForm
 from .models import Recipe
@@ -69,10 +70,12 @@ def edit_recipe(request, pk):
     return render(request, 'recipes/edit_recipe.html', context)
 
 def import_recipes_csv(request):
+    print('DEBUG: import_recipes_csv view called')
     if request.method == 'POST':
         form = CSVImportForm(request.POST, request.FILES)
         if form.is_valid():
             csv_file = request.FILES['csv_file']
+            print(f'DEBUG: CSV file name: {csv_file}')
             if not csv_file.name.endswith('.csv'):
                 context = {'form': form, 'error': 'File is not CSV type'}
                 return render(request, 'recipes/import_csv.html', context)
@@ -84,33 +87,36 @@ def import_recipes_csv(request):
                 next(csv_data)
 
             for row in csv_data:
+                print(f'DEBUG: Processing row: {row}')
                 try:
                     name = row[0]
                     ingredient_details_str = row[1]
                     instructions_str = row[2]
                     servings = int(row[3])
-                    prep_time = row[4]
-                    cook_time = row[5]
+                    prep_time = int(row[4])
+                    cook_time = int(row[5])
                     category_str = row[6]
                     notes = row[7]
+                    print(f'DEBUG: {name}, {ingredient_details_str}, {instructions_str}, {servings}, {prep_time}, {cook_time}, {category_str}, {notes}')
 
-                    ingredient_details = eval(ingredient_details_str) if ingredient_details_str else {}
-                    instructions = eval(instructions_str) if instructions_str else []
-                    category = eval(category_str) if category_str else []
-
-                    Recipe.objects.create(
-                        name=name,
-                        ingredient_details=ingredient_details,
-                        instructions=instructions,
-                        servings=servings,
-                        prep_time=prep_time,
-                        cook_time=cook_time,
-                        category=category,
-                        notes=notes,
-                    )
+                    # ingredient_details = ast.literal_eval(ingredient_details_str) if ingredient_details_str else {}
+                    # instructions = ast.literal_eval(instructions_str) if instructions_str else []
+                    # category = ast.literal_eval(category_str) if category_str else []
+                    # print(f'DEBUG: {ingredient_details}, {instructions}, {category}')
                 except Exception as e:
                     context = {'form': form, 'error': f'Error processing row: {e}'}
                     return render(request, 'recipes/import_csv.html', )
+                
+                Recipe.objects.create(
+                        name=name,
+                        ingredient_details=ingredient_details_str,
+                        instructions=instructions_str,
+                        servings=servings,
+                        prep_time=prep_time,
+                        cook_time=cook_time,
+                        category=category_str,
+                        notes=notes,
+                    )
             return redirect('recipes:recipe_list')
     else:
         form = CSVImportForm()
