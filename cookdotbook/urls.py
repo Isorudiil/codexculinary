@@ -16,10 +16,12 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
+from meals.views import today_meals
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('accounts/', include('django.contrib.auth.urls')),
     path('recipes/', include('recipes.urls', namespace='recipes')),
     path('meals/', include('meals.urls', namespace='meals')),
+    path('', today_meals, name='today_meals')
 ]

@@ -1,0 +1,14 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <h1>Meals Planned for Today ({{ today|date:"l, F j" }})</h1>
+    {% if meals %}
+        <ul>
+            {% for meal in meals %}
+                <li>{{ meal.get_meal_type_display }}: <a href="{% url 'recipes:recipe_detail' meal.recipe.pk %}">{{ meal.recipe.name }}</a></li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <p>No meals planned for today.</p>
+    {% endif %}
+{% endblock %}

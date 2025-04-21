@@ -8,15 +8,13 @@
     <form method="post" enctype="multipart/form-data">
         {% csrf_token %}
         {{ form.as_p }}
-        <input type="hidden" id="form-submitted" name="form-submitted" value="0">
-        <button type="submit" onclick="alert('Button clicked!')">Import</button>
+        <button type="submit">Import</button>
     </form>
     <a href="{% url 'recipes:recipe_list' %}">Cancel</a>
 
     {% if errors %}
-        <div id="message-popup" style="display:none; position:fixed; top:50%; left:50%; transform:translate(-50%, -50%); background-color:white; border:1px solid red; padding:20px; z-index:1000;">
-            <h2>Import Report</h2>
-            <p>Successfully imported {{ successful_imports }} recipe{% if successful_imports == 1 %}.{% else %}s.{% endif %}</p>
+        <div id="error-popup" style="display:none; position:fixed; top:50%; left:50%; transform:translate(-50%, -50%); background-color:white; border:1px solid red; padding:20px; z-index:1000;">
+            <h2>Import Errors</h2>
             <ul>
                 {% for error in errors %}
                     <li>{{ error }}</li>
@@ -25,62 +23,21 @@
             <button onclick="closePopup()">Close</button>
         </div>
         <div id="overlay" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background-color:rgba(0,0,0,0.5); z-index:999;"></div>
+
         <script>
             function showPopup() {
-                console.log('showPopup called');
-                console.log('form-submitted value:', document.getElementById('form-submitted').value);
-                if (document.getElementById('form-submitted').value === '1') {
-                document.getElementById('message-popup').style.display = 'block';
+                document.getElementById('error-popup').style.display = 'block';
                 document.getElementById('overlay').style.display = 'block';
-                } else {
-                    console.log('form not submitted yet');
-                }
             }
 
             function closePopup() {
-                console.log('closePopup called');
-                document.getElementById('message-popup').style.display = 'none';
+                document.getElementById('error-popup').style.display = 'none';
                 document.getElementById('overlay').style.display = 'none';
             }
 
-            document.addEventListener('DOMContentLoaded', function() {
-            showPopup();
-            });
-        </script>
-    {% else %}
-        <div id="message-popup" style="display:none; position:fixed; top:50%; left:50%; transform:translate(-50%, -50%); background-color:white; border:1px solid green; padding:20px; z-index:1000;">
-            <h2>Import Successful</h2>
-            <p>Successfully imported {{ successful_imports }} recipe{% if successful_imports == 1 %}.{% else %}s.{% endif %}</p>
-            <button onclick="closePopup()">Close</button>
-        </div>
-        <div id="overlay" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background-color:rgba(0,0,0,0.5); z-index:999;"></div>
-        <script>
-            function showPopup() {
-                console.log('showPopup called (success)');
-                console.log('form-submitted value (success):', document.getElementById('form-submitted').value);
-                if (document.getElementById('form-submitted').value === '1') {
-                    document.getElementById('message-popup').style.display = 'block';
-                    document.getElementById('overlay').style.display = 'block';
-                } else {
-                    console.log('form not submitted yet (success)');
-                }
-            }
-
-            function closePopup() {
-                console.log('closePopup called');
-                document.getElementById('message-popup').style.display = 'none';
-                document.getElementById('overlay').style.display = 'none';
-            }
-
-            document.addEventListener('DOMContentLoaded', function() {
-            showPopup();
-            });
+            window.onload = function() {
+                showPopup();
+            };
         </script>
     {% endif %}
-    <script>
-        function setFormSubmitted() {
-        document.getElementById('form-submitted').value = '1';
-        console.log('setFormSubmitted called');
-    }
-    </script>
 {% endblock %}

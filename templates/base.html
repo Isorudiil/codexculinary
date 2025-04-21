@@ -5,16 +5,16 @@
     <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
-        <title>{{ title }}</title>
+        <title>{% block title %}Codex Culinary{% endblock %}</title>
         <link rel="stylesheet" href="{% static 'style.css' %}">
     </head>
     <section>
-        <h1>Cook.Book</h1>
+        <h1><a href="{% url 'today_meals' %}">Codex Culinary</a></h1>
         <header>
             <nav>
-            <a href="{% url 'recipes:recipe_list' %}">Recipe List</a> | 
-            <a href="{% url 'recipes:add_recipe' %}">Add Recipe</a> | 
-            <a href="{% url 'recipes:import_recipes_csv' %}">Import CSV</a>
+            <a href="{% url 'recipes:recipe_list' %}" class="nav-bar">Recipe List</a> | 
+            <a href="{% url 'recipes:add_recipe' %}" class="nav-bar">Add Recipe</a> | 
+            <a href="{% url 'recipes:import_recipes_csv' %}" class="nav-bar">Import CSV</a>
             </nav>
             <hr>
         </header>

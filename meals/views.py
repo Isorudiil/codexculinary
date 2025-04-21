@@ -2,6 +2,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from .forms import MealForm
 from .models import Meal
+import datetime
 
 @login_required
 def meal_schedule(request):
@@ -44,3 +45,11 @@ def delete_meal(request, pk):
         return redirect('meal_schedule')
     context = {'meal', meal}
     return render(request, 'meals/delete_meal.html', context)
+
+@login_required
+def today_meals(request):
+    today = datetime.date.today()
+    day_name = today.strftime('%A').lower()
+    meals = Meal.objects.filter(user=request.user, day=day_name)
+    context = {'meals': meals, 'today': today}
+    return render(request, 'meals/today_meals.html', context)
