@@ -26,12 +26,13 @@ SECRET_KEY = 'django-insecure-)+(@y#0d6#30sb(pv(g17s5_dwuqi4evi$dea)q#ri#_x_#d+l
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['127.0.0.1', 'localhost', 'codexculinary.com']
 
 
 # Application definition
 
 INSTALLED_APPS = [
+    'accounts.apps.AccountsConfig',
     'recipes.apps.RecipesConfig',
     'meals.apps.MealsConfig',
     'recipes.templatetags.dict_filters',
@@ -53,12 +54,12 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
-ROOT_URLCONF = 'cookdotbook.urls'
+ROOT_URLCONF = 'codexculinary.urls'
 
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [str(BASE_DIR / 'templates')],
+        'DIRS': [os.path.join(BASE_DIR, 'templates'),],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -70,7 +71,7 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = 'cookdotbook.wsgi.application'
+WSGI_APPLICATION = 'codexculinary.wsgi.application'
 
 
 # Database
@@ -128,3 +129,5 @@ STATICFILES_DIRS = [
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+LOGIN_REDIRECT_URL = 'today_meals'

@@ -1,0 +1,30 @@
+cPanel SSH Access:
+}7W._&XGgfbV
+
+Generating public/private rsa key pair.
+Enter passphrase (empty for no passphrase): 
+Enter same passphrase again: 
+Your identification has been saved in /home/codebfph/.ssh/id_rsa.
+Your public key has been saved in /home/codebfph/.ssh/id_rsa.pub.
+The key fingerprint is:
+SHA256:7dlwB1sqUiZuCBFr8RdHwBdhvK/NZYJrlAbj0jE18Oc 
+The key's randomart image is:
++---[RSA 2048]----+
+|    +. .+=*o     |
+|     =  .==      |
+|    + . oo+oo .  |
+|   . . +==.o =   |
+|      .oS=++E .  |
+|      ..oo=*o.o  |
+|       . oo=.+   |
+|          + o    |
+|         .       |
++----[SHA256]-----+
+
+
+MySQL DB:
+Jm]&Az[*RgS~
+
+Django web superuser:
+codebfph
+myQue3n116!

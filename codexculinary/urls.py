@@ -20,8 +20,8 @@ from meals.views import today_meals
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('accounts/', include('django.contrib.auth.urls')),
     path('recipes/', include('recipes.urls', namespace='recipes')),
+    path('accounts/', include('accounts.urls', namespace='accounts')),
     path('meals/', include('meals.urls', namespace='meals')),
     path('', today_meals, name='today_meals')
 ]
