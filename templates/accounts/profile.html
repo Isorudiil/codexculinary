@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+
+{% block title %}User Profile{% endblock %}
+
+{% block content %}
+    <h2>User Profile</h2>
+
+    <p><strong>Username:</strong> {{ user.username }}</p>
+    <p><strong>Email:</strong> {{ user.email }}</p>
+
+    <hr>
+
+    <h3>Account Management</h3>
+    <ul>
+        <li><a href="{% url 'password_change' %}">Change Password</a></li>
+    </ul>
+    <form action="{% url 'logout' %}" method="post" style="display: inline;">
+        {% csrf_token %}
+        <button type="submit" class="btn btn-danger">Log Out</button>
+    </form>
+{% endblock %}
