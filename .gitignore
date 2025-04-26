@@ -5,9 +5,6 @@ local_settings.py
 db.sqlite3
 *.log
 *.pot
-media/*
-static/*
-/myproject/static/
 /myproject/tmp/
 /myproject/media/
 .vscode/

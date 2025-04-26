@@ -1,0 +1,125 @@
+.recipe-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 20px;
+}
+
+.recipe-item {
+    border: 1px solid #ccc;
+    padding: 15px;
+    border-radius: 5px;
+}
+
+.recipe-item h2 {
+    margin-top: 0;
+}
+
+.recipe-item a {
+    text-decoration: none;
+    color: #ccc;
+}
+
+.recipe-item a:hover {
+    color: #007bff;
+}
+
+.form-group {
+    margin-bottom: 15px; /* Add spacing between form fields */
+}
+
+label {
+    display: block; /* Make labels appear above the input fields */
+    font-weight: bold; /* Make labels bold */
+    margin-bottom: 5px; /* Add spacing between labels and inputs */
+}
+
+input[type="text"],
+input[type="number"],
+textarea {
+    width: 100%; /* Make input fields take up the full width */
+    padding: 8px; /* Add padding inside input fields */
+    border: 1px solid #ccc; /* Add a light gray border */
+    border-radius: 4px; /* Add rounded corners */
+    box-sizing: border-box; /* Include padding and border in the width */
+}
+
+textarea {
+    height: 100px; /* Make textareas taller */
+}
+
+.save-button {
+    padding: 10px 20px;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.save-button:hover {
+    background-color: #45a049;
+}
+
+.cancel-button {
+    display: inline-block;
+    padding: 10px 20px;
+    background-color: #f0f0f0;
+    color: #333;
+    text-decoration: none;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.cancel-button:hover {
+    background-color: #e0e0e0;
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    color: #3c3c3c;
+}
+
+.delete-button {
+    display: inline-block;
+    padding: 10px 20px;
+    background-color: #dc3545; /* Red background */
+    color: white;
+    text-decoration: none;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.delete-button:hover {
+    background-color: #c82333; /* Darker red on hover */
+}
+
+.select-button {
+    display: inline-block;
+    padding: 10px 20px;
+    background-color: darkgray;
+    color: white;
+    text-decoration: none;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.select-button:hover {
+    background-color: grey; /* Darker red on hover */
+}
+
+h1 a {
+    text-decoration: none;
+    color: #3c3c3c;
+}
+
+h1 a:hover {
+    color: gray;
+}
+
+.nav-bar {
+    text-decoration: none;
+    color: #3c3c3c;
+}
